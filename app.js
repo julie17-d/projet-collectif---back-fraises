@@ -29,12 +29,11 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/api/furnitures", (req, res, next) => {
+app.get("/api/furnitures", (req, res) => {
   // on a créer un middleware qui repond a la requete GET
   Furniture.find()
     .then((furnitures) => res.status(201).json(furnitures))
     .catch((error) => res.status(400).json({error}));
-  next();
 });
 
 app.post("/api/furnitures", (req, res) => {
