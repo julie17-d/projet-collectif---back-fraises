@@ -5,7 +5,11 @@ const furnitureSchema = mongoose.Schema({
   title: {type: String, required: true},
   type: {type: String, required: true},
   description: {type: String, required: true},
-  dimensions: {type: Object, required: true},
+  dimensions: {
+    height: {type: Number, required: true},
+    width: {type: Number, required: true},
+    depth: {type: Number},
+  },
   colors: {type: String, required: true},
   materials: {
     type: String,
@@ -22,7 +26,7 @@ const furnitureSchema = mongoose.Schema({
         "stone",
         "other",
       ],
-      message: "error",
+      message: "wrong material",
     },
   },
   pictureUrl: {type: String, required: true},
