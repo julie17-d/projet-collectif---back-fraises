@@ -5,7 +5,7 @@ const mongoose = require("mongoose"); // on fait appel au module mongoose qui es
 mongoose
   .connect(
     "mongodb+srv://fraises:back@cluster0.iutroww.mongodb.net/?retryWrites=true&w=majority",
-    { useNewUrlParser: true, useUnifiedTopology: true }
+    {useNewUrlParser: true, useUnifiedTopology: true}
   ) // Methode "connect()" de mongoose qui permet de se connecter à la BDD mongoDB atlas (cloud)
   .then(() => console.log("Connexion à MongoDB réussie !"))
   .catch(() => console.log("Connexion à MongoDB échouée !"));
@@ -55,8 +55,8 @@ app.post("/api/furnitures", (req, res, next) => {
   });
   furniture
     .save()
-    .then(() => res.status(201).json({ message: "Objet enregistré!" }))
-    .catch((error) => res.status(400).json({ error }));
+    .then(() => res.status(201).json({message: "Objet enregistré!"}))
+    .catch((error) => res.status(400).json({error}));
   next();
 });
 
@@ -64,7 +64,7 @@ app.use("/api/furnitures", (req, res) => {
   // on a créer un middleware qui repond a la requete GET
   Furniture.find()
     .then((furnitures) => res.status(200).json(furnitures))
-    .catch((error) => res.status(400).json({ error }));
+    .catch((error) => res.status(400).json({error}));
 });
 
 module.exports = app; // on exporte le module app qu'on recupere dans le serveur
