@@ -1,0 +1,111 @@
+{   
+    title: "Méridienne Julie",
+    type: "assise",
+    description: "Avec cette méridienne, vous pourrez vous affaler à n'importe quel moment de la journée. Idéal pour grignoter en lisant un livre.",
+    dimensions_cm: {
+        height: 50,
+        width: 200,
+        depth: 60
+    },
+    colors: "bleu",
+    materials: ["wood", "textile"],
+    pictureUrl: "https://cdn1.vente-unique.com/thumbnails/product/127/127631/gallery_slider/xl/meridienne_496545.jpg",
+    price: 650,
+    status: {
+        "onSale": false,
+        "pending": true,
+        "sold": false
+        },
+    seller: "Julie Baret",
+    date: Date.now()
+}
+
+{
+    title: "Fauteuil Mehmet",
+    type: "assise",
+    description:
+      "Confortable et cosy, ce fauteuil vous assurera un bon assoupissement ; vous vous endormirez sans effort.",
+    dimensions_cm: {
+      height: 80,
+      width: 60,
+      depth: 60,
+    },
+    colors: "marron",
+    materials: ["métal", "cuir"],
+    pictureUrl:
+      "https://www.stanfield.fr/267-home_default/fauteuil-cuir-vintage-marron-eddy.jpg",
+    price: 450,
+    status: {
+      onSale: true,
+      pending: false,
+      sold: false,
+    },
+    seller: "Lauréline Fleury",
+    date: Date.now(),
+}
+
+{   
+    title: "Chaise à bascule Juanita",
+    type: "siège",
+    description: "Cette chaise à bascule, ou rocking chair dans sa version originale, saura ravir toutes les âmes d'enfants ! Rassurante et amusante.",
+    dimensions_cm: {
+        height: 90,
+        width: 50,
+        depth: 60
+    },
+    colors: "gris",
+    materials: ["wood", "textile"],
+    pictureUrl: "https://www.so-inside.com/15877-large_default/rocking-chair-design-avec-structure-en-metal-noir-et-bois-massif-imagine.jpg",
+    price: 650,
+    status: {
+        onSale: true,
+        pending: false,
+        sold: false
+        },
+    seller: "Lauréline Fleury",
+    date: Date.now()
+}
+
+{   
+    title: "Canapé-lit Clémentine",
+    type: "assise",
+    description: "Que vous ayez une envie de vous assoupir ou de savourer une tasse de thé, le canapé-lit Clémentine sera toujours là pour combler vos besoins.",
+    dimensions_cm: {
+        height: 80,
+        width: 240,
+        depth: 80
+    },
+    materials: ["textile"],
+    colors: "jaune",
+    pictureUrl: "https://assets.loaf.com/images/hero_large/4833611-squisharoo.jpg",
+    price: 950,
+    status: {
+        onSale: true,
+        pending: false,
+        sold: false
+        },
+    seller: "Lauréline Fleury",
+    date: Date.now()
+}
+
+{
+    title: "Table Delhia",
+    type: "table",
+    description: "Fiable et élégante, cette table ne vous laissera jamais tomber. Grâce à elle, fancyness is your way.",
+    dimensions_cm: {
+        height: 70,
+        width: 140,
+        depth: 20
+    },
+    colors: "rose",
+    materials: ["marble"],
+    pictureUrl: "https://cdn.shopify.com/s/files/1/0627/1244/7234/products/IMG_0972_1445x.jpg",
+    price: 3000,
+    status: {
+        "onSale: true,
+        "pending: false,
+        "sold: false
+        },
+    seller: "Lauréline Fleury",
+    date: Date.now()
+}
