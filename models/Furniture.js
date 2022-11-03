@@ -1,11 +1,14 @@
 const mongoose = require("mongoose"); // on fait appel au module mongoose qui est un module Node
-
 // Utilisation de la méthode Schema de mongoose pour créer un schéma de données
 const furnitureSchema = mongoose.Schema({
   title: { type: String, required: true },
   type: { type: String, required: true },
   description: { type: String, required: true },
-  dimensions: { type: Object, required: true },
+  dimensions_cm: {
+    height: { type: Number, required: true },
+    width: { type: Number, required: true },
+    depth: { type: Number, required: false },
+  },
   colors: { type: String, required: true },
   materials: {
     type: String,
@@ -20,6 +23,7 @@ const furnitureSchema = mongoose.Schema({
         "plastic",
         "leather",
         "stone",
+        "textile",
         "other",
       ],
       message: "error",
@@ -35,5 +39,4 @@ const furnitureSchema = mongoose.Schema({
   seller: { type: String, required: true },
   date: { type: Date, required: true },
 });
-
 module.exports = mongoose.model("Furniture", furnitureSchema); // on exporte pour pouvoir le récupérer dans d'autres fichiers
