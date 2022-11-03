@@ -12,8 +12,10 @@ mongoose
   .catch(() => console.log("Connexion à MongoDB échouée !"));
 // on console.log la réussite ou non de la connexion (.then ou .catch)
 
+//On ajoute le model Furniture
 const Furniture = require("./models/Furniture");
 
+//Permettre d'accéder à l'API depuis n'importe quelle origine et d'ajouter des headers aux requêtes envoyées à l'API
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -28,9 +30,7 @@ app.use((req, res, next) => {
 });
 
 app.post("/api/furnitures", (req, res, next) => {
-  // res.send("Hello Juanita!");
-  // on a créé un middleware qui repond à la requete POST
-  // delete req.body._id;
+  // on a créer un middleware qui repond a la requete POST
   const furniture = new Furniture({
     title: "Table Delhia",
     type: "table",
@@ -52,13 +52,20 @@ app.post("/api/furnitures", (req, res, next) => {
       sold: false,
     },
     seller: "Lauréline Fleury",
-    date: "1667468404734",
+    date: Date.now(),
   });
   furniture
     .save()
-    .then(() => res.status(201).json({message: "meuble enregistré"}))
-    .catch(() => res.status(400).json({error}));
+    .then(() => res.status(201).json({message: "Objet enregistré!"}))
+    .catch((error) => res.status(400).json({error}));
   next();
+});
+
+app.use("/api/furnitures", (req, res) => {
+  // on a créer un middleware qui repond a la requete GET
+  Furniture.find()
+    .then((furnitures) => res.status(200).json(furnitures))
+    .catch((error) => res.status(400).json({error}));
 });
 
 app.get("/api/furnitures", (req, res) => {
