@@ -29,23 +29,33 @@ app.use((req, res, next) => {
   next();
 });
 
-app.post("/api/furnitures", (req, res, next) => {
+app.get("/api/furnitures", (req, res, next) => {
+  // on a créer un middleware qui repond a la requete GET
+  Furniture.find()
+    .then((furnitures) => res.status(201).json(furnitures))
+    .catch((error) => res.status(400).json({error}));
+  next();
+});
+
+app.post("/api/furnitures", (req, res) => {
+  // to delete an entire collection on mongoDB
+  // Furniture.collection.deleteMany();
   // on a créer un middleware qui repond a la requete POST
   const furniture = new Furniture({
-    title: "Table Delhia",
-    type: "table",
+    title: "Canapé-lit Clémentine",
+    type: "assise",
     description:
-      "Fiable et élégante, cette table ne vous laissera jamais tomber. Grâce à elle, fancyness is your way.",
+      "Que vous ayez une envie de vous assoupir ou de savourer une tasse de thé, le canapé-lit Clémentine sera toujours là pour combler vos besoins.",
     dimensions_cm: {
-      height: 70,
-      width: 140,
-      depth: 20,
+      height: 80,
+      width: 240,
+      depth: 80,
     },
-    colors: "rose",
-    materials: "marble",
+    materials: ["textile"],
+    colors: "jaune",
     pictureUrl:
-      "https://cdn.shopify.com/s/files/1/0627/1244/7234/products/IMG_0972_1445x.jpg",
-    price: 3000,
+      "https://assets.loaf.com/images/hero_large/4833611-squisharoo.jpg",
+    price: 950,
     status: {
       onSale: true,
       pending: false,
@@ -56,23 +66,7 @@ app.post("/api/furnitures", (req, res, next) => {
   });
   furniture
     .save()
-    .then(() => res.status(201).json({message: "Objet enregistré!"}))
-    .catch((error) => res.status(400).json({error}));
-  next();
-});
-
-app.use("/api/furnitures", (req, res) => {
-  // on a créer un middleware qui repond a la requete GET
-  Furniture.find()
-    .then((furnitures) => res.status(200).json(furnitures))
-    .catch((error) => res.status(400).json({error}));
-});
-
-app.get("/api/furnitures", (req, res) => {
-  // on a créé un middleware qui repond à la requete GET
-  // res.send("Hello DEDE!");
-  Furniture.find()
-    .then((furnitures) => res.status(200).json(furnitures))
+    .then(() => res.status(201).json({message: "Objet enregistré !"}))
     .catch((error) => res.status(400).json({error}));
 });
 
