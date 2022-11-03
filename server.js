@@ -29,7 +29,7 @@ const errorHandler = (error) => {
     case "EADDRINUSE":
       console.error(bind + " is already in use.");
       process.exit(1);
-      break;
+      break; // on fait appel au module mongoose qui est un module Node
     default:
       throw error;
   }
@@ -40,6 +40,6 @@ server.on("error", errorHandler);
 server.on("listening", () => {
   const address = server.address();
   const bind = typeof address === "string" ? "pipe " + address : "port " + port;
-  console.log("Listening on " + bind); //quand on a le serveur qui est lancé, on console.log le port où on l'ecoute
+  console.log("Listening on " + bind); // quand on a le serveur qui est lancé, on console.log le port où on l'ecoute
 });
 server.listen(port); // on lance le serveur et l'ecoute

@@ -5,7 +5,7 @@ const furnitureSchema = mongoose.Schema({
   title: {type: String, required: true},
   type: {type: String, required: true},
   description: {type: String, required: true},
-  dimensions: {
+  dimensions_cm: {
     height: {type: Number, required: true},
     width: {type: Number, required: true},
     depth: {type: Number},

@@ -1,5 +1,6 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose"); // on fait appel au module mongoose qui est un module Node
 
+// Utilisation de la méthode Schema de mongoose pour créer un schéma de données
 const commandSchema = mongoose.Schema({
   userId: {type: Number, required: true},
   totalPrice: {type: Number, required: true},
