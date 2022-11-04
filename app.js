@@ -1,5 +1,6 @@
 const express = require("express"); // on importe le module node express
 const app = express(); // on appelle la methode express
+const bodyParser = require('body-parser')
 
 const mongoose = require("mongoose"); // on fait appel au module mongoose qui est un module Node
 
@@ -14,6 +15,10 @@ mongoose
 
 //On ajoute le model Furniture
 const Furniture = require("./models/Furniture");
+
+// middleware
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 //Permettre d'accéder à l'API depuis n'importe quelle origine et d'ajouter des headers aux requêtes envoyées à l'API
 app.use((req, res, next) => {
@@ -77,6 +82,16 @@ app.post("/api/furnitures", (req, res) => {
     .save()
     .then(() => res.status(201).json({message: "Objet enregistré !"}))
     .catch((error) => res.status(400).json({error}));
+});
+
+app.post("/api/validCart", (req, res) => {
+  console.log(req.body);
+  let query = req.body;
+  for (let i = 0; i<query.length; i++){
+    let idProduct = query[i]._id;
+    console.log(idProduct);
+  }
+  res.send('Requête envoyée');
 });
 
 module.exports = app; // on exporte le module app qu'on récupère dans le serveur
