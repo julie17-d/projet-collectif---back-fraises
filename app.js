@@ -2,6 +2,10 @@ const express = require("express"); // on importe le module node express
 const app = express(); // on appelle la methode express
 // on ajoute le module bcrypt pour crypter les mots de passe des users
 const bcrypt = require("bcrypt");
+// on ajoute le module jsonwebtoken pour créer des token et les vérifier
+const jwt = require("jsonwebtoken");
+const auth = require("./middleware/auth");
+
 const mongoose = require("mongoose"); // on fait appel au module mongoose qui est un module Node
 
 mongoose
@@ -30,7 +34,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/api/furnitures", (req, res) => {
+app.get("/api/furnitures", auth, (req, res) => {
   // voici un middleware qui repond a la requete GET
   let query = req.query;
   // on récupère la requête du front (idéalement un objet en JSON qui reprend l'attribut et la valeur du filtre)
@@ -49,7 +53,7 @@ app.get("/api/furnitures", (req, res) => {
     .catch((error) => res.status(400).json({error}));
 });
 
-app.post("/api/furnitures", (req, res) => {
+app.post("/api/furnitures", auth, (req, res) => {
   // to delete an entire collection on mongoDB
   // Furniture.collection.deleteMany();
   // on a créer un middleware qui repond a la requete POST
@@ -86,7 +90,7 @@ app.post("/api/furnitures", (req, res) => {
 const User = require("./models/User");
 
 // on crée un endpoint pour l'authentification signup
-app.post("/api/auth/signup", (req, res) => {
+app.post("/api/auth/signup", auth, (req, res) => {
   bcrypt
     .hash("test", 10) //req.body.password quand info reçue du front
     .then((hash) => {
@@ -123,7 +127,7 @@ app.post("/api/auth/signup", (req, res) => {
 });
 
 // on crée un endpoint pour l'authentification login
-app.post("/api/auth/login", (req, res) => {
+app.post("/api/auth/login", auth, (req, res) => {
   User.findOne({email: "test2@gmail.com"}) //req.body.email quand info reçue du front
     .then((user) => {
       if (user === null) {
@@ -144,8 +148,16 @@ app.post("/api/auth/login", (req, res) => {
             } else {
               res.status(200).json({
                 userId: user._id,
-                token: "TOKEN", //codé en dur pour le moment
-              });
+                token: jwt.sign(
+                  {userId: user._id}, // données à encoder à l'interieur du token => on appelle ça le "payload". On encode le userId car si je crée un objet avec un user, je ne dois pas pouvoir le modifier avec un autre user. Le userId encodé sera utilisé pour appliquer le bon userId à chaque objet pourqu'il ne puisse être modifié que par le user qui l'a créé.
+                  "RANDOM_TOKEN_SECRET", // clé secrète pour l'encodage => ici, un secret simple est créé car on est en dév et pas en prod.
+                  {expiresIn: "24h"} // ici, expiration pour le token de 24h
+                ),
+              }); // donne ca :
+              // {
+              //   "userId": "6364ef5ddec265547ab60d18",
+              //   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzY0ZWY1ZGRlYzI2NTU0N2FiNjBkMTgiLCJpYXQiOjE2Njc1Njk4MDksImV4cCI6MTY2NzY1NjIwOX0.y9aOjYHIrgpAL9gGSSI1oq4dfIUdJVLGVLQ0kRRoVCg"
+              // }
             }
           })
           .catch((error) => {
@@ -157,4 +169,5 @@ app.post("/api/auth/login", (req, res) => {
       req.status(500).json({error});
     });
 });
+
 module.exports = app; // on exporte le module app qu'on récupère dans le serveur
