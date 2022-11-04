@@ -69,4 +69,35 @@ app.post("/api/furnitures", (req, res) => {
     .catch((error) => res.status(400).json({error}));
 });
 
+// on ajoute le module bcrypt pour crypter les mots de passe des users
+const bcrypt = require("bcrypt");
+// on ajoute le model User
+const users = require("./models/User");
+
+// on crée un endpoint pour l'authentification signup et login
+app.post("/api/auth/signup", (req, res) => {
+  bcrypt
+    .hash("test", 10)
+    .then((hash) => {
+      const user = new User({
+        // email: req.body.email,
+        // password: hash,
+        firstName: "Test",
+        lastName: "Test",
+        email: "test@gmail.com",
+        password: hash,
+        phoneNumber: 607080910,
+        address: "Montreuil",
+        subscriptionDate: Date.now(),
+        commands: [],
+        status: "client",
+      });
+      user
+        .save()
+        .then(() => res.status(201).json({message: "utilisateur créé"}))
+        .catch((error) => res.status(400).json({error}));
+    })
+    .catch((error) => res.status(500).json({error}));
+});
+app.post("/api/auth/login", (req, res) => {});
 module.exports = app; // on exporte le module app qu'on récupère dans le serveur
