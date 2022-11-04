@@ -30,8 +30,18 @@ app.use((req, res, next) => {
 });
 
 app.get("/api/furnitures", (req, res) => {
-  // on a créer un middleware qui repond a la requete GET
-  Furniture.find()
+// voici un middleware qui repond a la requete GET
+  let query = req.query;
+  //on récupère la requête du front (idéalement un objet en JSON qui reprend l'attribut et la valeur du filtre)
+  let queryKey = Object.keys(query);
+  //on récupère l'attribut
+  let queryValue = Object.values(query);
+  //on récupère la valeur
+  queryKey = queryKey[0];
+  queryValue = queryValue[0];
+  //on ajoute un filtre à la méthode find() selon l'attribut et la valeur
+  Furniture.find({ [queryKey]: queryValue}).where('status.onSale').equals(true)
+  //on affiche que les meubles dont le statut est onSale
     .then((furnitures) => res.status(201).json(furnitures))
     .catch((error) => res.status(400).json({ error }));
 });
