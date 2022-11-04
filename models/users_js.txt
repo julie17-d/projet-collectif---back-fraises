@@ -1,0 +1,49 @@
+{
+    firstName: "Delhia",
+    lastName: "Gbelidji",
+    email: "delhia.gb5@gmail.com",
+    password: "lol",
+    phoneNumber: "0607080910",
+    address: "Montreuil",
+    subscriptionDate: Date.now(),
+    commands: [],
+    status: "client",
+  }
+
+  {
+    firstName: "Alexandre",
+    lastName: "Luu",
+    email: "alex.luu@ada.fr",
+    password: "desbarres",
+    phoneNumber: "0102030405",
+    address: "Paris",
+    subscriptionDate: Date.now(),
+    commands: [],
+    status: "client",
+  }
+
+  {
+    firstName: "Julie",
+    lastName: "Baret",
+    email: "julie.baret@meridienne.com",
+    password: "gourmandise",
+    phoneNumber: "0120304050",
+    address: "Paris Est",
+    subscriptionDate: Date.now(),
+    commands: [],
+    status: "client",
+  }
+
+  {
+    firstName: "Clem",
+    lastName: "Chasles",
+    email: "clemouille@choupette.fr",
+    password: "choupinerie",
+    phoneNumber: "0707070707",
+    address: "Marseille",
+    subscriptionDate: Date.now(),
+    commands: [],
+    status: "client",
+  }
+
+
