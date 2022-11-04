@@ -9,12 +9,6 @@ const userSchema = mongoose.Schema({
   phoneNumber: { type: String, required: true },
   address: { type: String, required: true },
   subscriptionDate: { type: Date, required: true },
-  commands: [
-    {
-      id_command: { type: Number, required: true },
-      price: { type: Number, required: true },
-    },
-  ],
   status: {
     type: String,
     required: true,

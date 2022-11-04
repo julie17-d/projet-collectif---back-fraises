@@ -6,7 +6,6 @@
     phoneNumber: "0607080910",
     address: "Montreuil",
     subscriptionDate: Date.now(),
-    commands: [],
     status: "client",
   }
 
@@ -18,7 +17,6 @@
     phoneNumber: "0102030405",
     address: "Paris",
     subscriptionDate: Date.now(),
-    commands: [],
     status: "client",
   }
 
@@ -42,7 +40,6 @@
     phoneNumber: "0707070707",
     address: "Marseille",
     subscriptionDate: Date.now(),
-    commands: [],
     status: "client",
   }
 
