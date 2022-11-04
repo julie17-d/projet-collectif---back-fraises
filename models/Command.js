@@ -2,17 +2,17 @@ const mongoose = require("mongoose"); // on fait appel au module mongoose qui es
 
 // Utilisation de la méthode Schema de mongoose pour créer un schéma de données
 const commandSchema = mongoose.Schema({
-  userId: {type: Number, required: true},
-  totalPrice: {type: Number, required: true},
-  purchaseDate: {type: Date, required: true},
+  userId: { type: Number, required: true },
   furnituresDetails: [
     {
-      id: {type: Number, required: true},
-      title: {type: String, required: true},
-      price: {type: Number, required: true},
-      pictureUrl: {type: String, required: true},
+      id: { type: Number, required: true },
+      title: { type: String, required: true },
+      price: { type: Number, required: true },
+      pictureUrl: { type: String, required: true },
     },
   ],
+  totalPrice: { type: Number, required: true },
+  purchaseDate: { type: Date, required: true },
   status: {
     type: String,
     required: true,

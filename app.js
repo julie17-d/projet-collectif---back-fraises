@@ -81,4 +81,31 @@ app.post("/api/furnitures", (req, res) => {
     .catch((error) => res.status(400).json({error}));
 });
 
+// on importe le model User
+
+const User = require("./models/User");
+
+app.post("/api/users", (req, res) => {
+  const user = new User({
+    firstName: "Delhia",
+    lastName: "Gbelidji",
+    email: "delhia.gb5@gmail.com",
+    password: "lol",
+    phoneNumber: "0607080910",
+    address: "Montreuil",
+    subscriptionDate: Date.now(),
+    status: "client",
+  });
+  user
+    .save()
+    .then(() => res.status(201).json({message: "Utilisateur enregistré !"}))
+    .catch((error) => res.status(400).json({error}));
+});
+
+app.get("/api/users", (req, res) => {
+  // on a créer un middleware qui repond a la requete GET
+  User.find()
+    .then((users) => res.status(201).json(users))
+    .catch((error) => res.status(400).json({error}));
+});
 module.exports = app; // on exporte le module app qu'on récupère dans le serveur
