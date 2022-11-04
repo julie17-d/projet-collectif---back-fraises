@@ -16,6 +16,9 @@ mongoose
 //On ajoute le model Furniture
 const Furniture = require("./models/Furniture");
 
+//On ajoute le model Command
+const Command = require("./models/Command");
+
 // middleware
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -84,14 +87,33 @@ app.post("/api/furnitures", (req, res) => {
     .catch((error) => res.status(400).json({error}));
 });
 
-app.post("/api/validCart", (req, res) => {
-  console.log(req.body);
+app.post("/api/validCart", async (req, res) => {
+  const command = await Command.create({
+    userId: "6364ef5ddec265547ab60d18",
+    purchaseDate: Date.now(),
+    status: "payed"
+  });
   let query = req.body;
+  let total = 0;
   for (let i = 0; i<query.length; i++){
-    let idProduct = query[i]._id;
-    console.log(idProduct);
+    let id = query[i]._id;
+    let title = query[i].title;
+    let price = query[i].price;
+    let pictureUrl = query[i].pictureUrl;
+    total += price;
+    command.furnituresDetails.push({
+      id: id,
+      title: title,
+      price: price,
+      pictureurl: pictureUrl
+    });
   }
-  res.send('Requête envoyée');
-});
+  command.totalPrice = total;
+  await command
+    .save()
+    .then(() => res.status(201).json({message: "Commande enregistrée !"}))
+    .catch((error) => res.status(400).json({error}));
+  }
+);
 
 module.exports = app; // on exporte le module app qu'on récupère dans le serveur
