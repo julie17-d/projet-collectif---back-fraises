@@ -4,6 +4,7 @@ const app = express(); // on appelle la methode express
 const bcrypt = require("bcrypt");
 // on ajoute le module jsonwebtoken pour créer des token et les vérifier
 const jwt = require("jsonwebtoken");
+// on ajoute le middleware qui vérifient et décodent les token pour les passer aux requêtes
 const auth = require("./middleware/auth");
 
 const mongoose = require("mongoose"); // on fait appel au module mongoose qui est un module Node
@@ -33,7 +34,7 @@ app.use((req, res, next) => {
   );
   next();
 });
-
+// on passe l'objet auth pour transmettre le token à la requête
 app.get("/api/furnitures", auth, (req, res) => {
   // voici un middleware qui repond a la requete GET
   let query = req.query;
@@ -52,7 +53,7 @@ app.get("/api/furnitures", auth, (req, res) => {
     .then((furnitures) => res.status(201).json(furnitures))
     .catch((error) => res.status(400).json({error}));
 });
-
+// on passe l'objet auth pour transmettre le token à la requête
 app.post("/api/furnitures", auth, (req, res) => {
   // to delete an entire collection on mongoDB
   // Furniture.collection.deleteMany();
@@ -86,36 +87,48 @@ app.post("/api/furnitures", auth, (req, res) => {
     .catch((error) => res.status(400).json({error}));
 });
 
-// on ajoute le model User
+// on importe le model User
+
 const User = require("./models/User");
+// on passe l'objet auth pour transmettre le token à la requête
+app.post("/api/users", auth, (req, res) => {
+  const user = new User({
+    firstName: "Delhia",
+    lastName: "Gbelidji",
+    email: "delhia.gb5@gmail.com",
+    password: "lol",
+    phoneNumber: "0607080910",
+    address: "Montreuil",
+    subscriptionDate: Date.now(),
+    status: "client",
+  });
+  user
+    .save()
+    .then(() => res.status(201).json({message: "Utilisateur enregistré !"}))
+    .catch((error) => res.status(400).json({error}));
+});
+
+// on passe l'objet auth pour transmettre le token à la requête
+app.get("/api/users", auth, (req, res) => {
+  // on a créer un middleware qui repond a la requete GET
+  User.find()
+    .then((users) => res.status(201).json(users))
+    .catch((error) => res.status(400).json({error}));
+});
 
 // on crée un endpoint pour l'authentification signup
-app.post("/api/auth/signup", auth, (req, res) => {
+app.post("/api/auth/signup", (req, res) => {
   bcrypt
-    .hash("test", 10) //req.body.password quand info reçue du front
+    .hash("Test3", 10) //req.body.password à la place de "Test3" quand info reçue du front
     .then((hash) => {
       const user = new User({
-        firstName: "Test", // firstName: req.body.firstName quand info reçue du front
-        lastName: "Test", // lastName: req.body.lastName
-        email: "test2@gmail.com", // email:req.body.email
+        firstName: "Test3", // firstName: req.body.firstName
+        lastName: "Test3", // lastName: req.body.lastName
+        email: "test3@gmail.com", // email:req.body.email
         password: hash, // reste comme ça
-        phoneNumber: 607080910, // phoneNumber : req.body.phoneNumber
-        address: "Montreuil", // address:req.body.address
+        phoneNumber: 600000000, // phoneNumber : req.body.phoneNumber
+        address: "Test3", // address:req.body.address
         subscriptionDate: Date.now(), // reste comme ça
-        commands: [
-          {
-            id: 1,
-            price: 1050,
-          },
-          {
-            id: 2,
-            price: 100,
-          },
-          {
-            id: 1,
-            price: 250,
-          },
-        ], //commands: req.body.commands
         status: "client", // status : req.body.status
       });
       user
@@ -127,8 +140,8 @@ app.post("/api/auth/signup", auth, (req, res) => {
 });
 
 // on crée un endpoint pour l'authentification login
-app.post("/api/auth/login", auth, (req, res) => {
-  User.findOne({email: "test2@gmail.com"}) //req.body.email quand info reçue du front
+app.post("/api/auth/login", (req, res) => {
+  User.findOne({email: "test3@gmail.com"}) //req.body.email quand info reçue du front
     .then((user) => {
       if (user === null) {
         res
@@ -137,9 +150,9 @@ app.post("/api/auth/login", auth, (req, res) => {
       } else {
         bcrypt
           .compare(
-            "test",
-            "$2b$10$uuGSzJtCDzuZcDwk317uJeCKbTb5yzyUlY2F7aYGn0aSgnVYgRt86"
-          ) //(req.body.password, user.password) quand info reçue du front
+            "Test3", // req.body.password quand info reçue du front
+            user.password
+          )
           .then((valid) => {
             if (!valid) {
               res
@@ -149,14 +162,14 @@ app.post("/api/auth/login", auth, (req, res) => {
               res.status(200).json({
                 userId: user._id,
                 token: jwt.sign(
-                  {userId: user._id}, // données à encoder à l'interieur du token => on appelle ça le "payload". On encode le userId car si je crée un objet avec un user, je ne dois pas pouvoir le modifier avec un autre user. Le userId encodé sera utilisé pour appliquer le bon userId à chaque objet pourqu'il ne puisse être modifié que par le user qui l'a créé.
+                  {userId: user._id}, // données à encoder à l'interieur du token => on appelle ça le "payload". On encode le userId car si on crée un objet avec un user, on ne doit pas pouvoir le modifier avec un autre user. Le userId encodé sera utilisé pour appliquer le bon userId à chaque objet pourqu'il ne puisse être modifié que par le user qui l'a créé.
                   "RANDOM_TOKEN_SECRET", // clé secrète pour l'encodage => ici, un secret simple est créé car on est en dév et pas en prod.
                   {expiresIn: "24h"} // ici, expiration pour le token de 24h
                 ),
-              }); // donne ca :
+              }); // ça donne ça :
               // {
-              //   "userId": "6364ef5ddec265547ab60d18",
-              //   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzY0ZWY1ZGRlYzI2NTU0N2FiNjBkMTgiLCJpYXQiOjE2Njc1Njk4MDksImV4cCI6MTY2NzY1NjIwOX0.y9aOjYHIrgpAL9gGSSI1oq4dfIUdJVLGVLQ0kRRoVCg"
+              //    "userId": "63652721127d875bcd0ab07e",
+              //    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzY1MjcyMTEyN2Q4NzViY2QwYWIwN2UiLCJpYXQiOjE2Njc1NzM5NzYsImV4cCI6MTY2NzY2MDM3Nn0.SgVfVoG-O7CLRVdFYdkr5iv8EleOeMb1J4RaE_k1e-I"
               // }
             }
           })
