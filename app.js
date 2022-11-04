@@ -1,6 +1,7 @@
 const express = require("express"); // on importe le module node express
 const app = express(); // on appelle la methode express
-
+// on ajoute le module bcrypt pour crypter les mots de passe des users
+const bcrypt = require("bcrypt");
 const mongoose = require("mongoose"); // on fait appel au module mongoose qui est un module Node
 
 mongoose
@@ -32,18 +33,18 @@ app.use((req, res, next) => {
 app.get("/api/furnitures", (req, res) => {
   // voici un middleware qui repond a la requete GET
   let query = req.query;
-  //on récupère la requête du front (idéalement un objet en JSON qui reprend l'attribut et la valeur du filtre)
+  // on récupère la requête du front (idéalement un objet en JSON qui reprend l'attribut et la valeur du filtre)
   let queryKey = Object.keys(query);
-  //on récupère l'attribut
+  // on récupère l'attribut
   let queryValue = Object.values(query);
-  //on récupère la valeur
+  // on récupère la valeur
   queryKey = queryKey[0];
   queryValue = queryValue[0];
-  //on ajoute un filtre à la méthode find() selon l'attribut et la valeur
+  // on ajoute un filtre à la méthode find() selon l'attribut et la valeur
   Furniture.find({[queryKey]: queryValue})
     .where("status.onSale")
     .equals(true)
-    //on affiche que les meubles dont le statut est onSale
+    // on affiche que les meubles dont le statut est onSale
     .then((furnitures) => res.status(201).json(furnitures))
     .catch((error) => res.status(400).json({error}));
 });
@@ -81,28 +82,37 @@ app.post("/api/furnitures", (req, res) => {
     .catch((error) => res.status(400).json({error}));
 });
 
-// on ajoute le module bcrypt pour crypter les mots de passe des users
-const bcrypt = require("bcrypt");
 // on ajoute le model User
-const users = require("./models/User");
+const User = require("./models/User");
 
-// on crée un endpoint pour l'authentification signup et login
+// on crée un endpoint pour l'authentification signup
 app.post("/api/auth/signup", (req, res) => {
   bcrypt
-    .hash("test", 10)
+    .hash("test", 10) //req.body.password quand info reçue du front
     .then((hash) => {
       const user = new User({
-        // email: req.body.email,
-        // password: hash,
-        firstName: "Test",
-        lastName: "Test",
-        email: "test@gmail.com",
-        password: hash,
-        phoneNumber: 607080910,
-        address: "Montreuil",
-        subscriptionDate: Date.now(),
-        commands: [],
-        status: "client",
+        firstName: "Test", // firstName: req.body.firstName quand info reçue du front
+        lastName: "Test", // lastName: req.body.lastName
+        email: "test2@gmail.com", // email:req.body.email
+        password: hash, // reste comme ça
+        phoneNumber: 607080910, // phoneNumber : req.body.phoneNumber
+        address: "Montreuil", // address:req.body.address
+        subscriptionDate: Date.now(), // reste comme ça
+        commands: [
+          {
+            id: 1,
+            price: 1050,
+          },
+          {
+            id: 2,
+            price: 100,
+          },
+          {
+            id: 1,
+            price: 250,
+          },
+        ], //commands: req.body.commands
+        status: "client", // status : req.body.status
       });
       user
         .save()
@@ -111,5 +121,40 @@ app.post("/api/auth/signup", (req, res) => {
     })
     .catch((error) => res.status(500).json({error}));
 });
-app.post("/api/auth/login", (req, res) => {});
+
+// on crée un endpoint pour l'authentification login
+app.post("/api/auth/login", (req, res) => {
+  User.findOne({email: "test2@gmail.com"}) //req.body.email quand info reçue du front
+    .then((user) => {
+      if (user === null) {
+        res
+          .status(401)
+          .json({message: "Paire identifiants mot de passe incorrecte"});
+      } else {
+        bcrypt
+          .compare(
+            "test",
+            "$2b$10$uuGSzJtCDzuZcDwk317uJeCKbTb5yzyUlY2F7aYGn0aSgnVYgRt86"
+          ) //(req.body.password, user.password) quand info reçue du front
+          .then((valid) => {
+            if (!valid) {
+              res
+                .status(401)
+                .json({message: "Paire identifiants mot de passe incorrecte"});
+            } else {
+              res.status(200).json({
+                userId: user._id,
+                token: "TOKEN", //codé en dur pour le moment
+              });
+            }
+          })
+          .catch((error) => {
+            res.status(500).json({error});
+          });
+      }
+    })
+    .catch((error) => {
+      req.status(500).json({error});
+    });
+});
 module.exports = app; // on exporte le module app qu'on récupère dans le serveur
