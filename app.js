@@ -7,7 +7,7 @@ const mongoose = require("mongoose"); // on fait appel au module mongoose qui es
 mongoose
   .connect(
     "mongodb+srv://fraises:back@cluster0.iutroww.mongodb.net/?retryWrites=true&w=majority",
-    {useNewUrlParser: true, useUnifiedTopology: true}
+    { useNewUrlParser: true, useUnifiedTopology: true }
   ) // Methode "connect()" de mongoose qui permet de se connecter à la BDD mongoDB atlas (cloud)
   .then(() => console.log("Connexion à MongoDB réussie !"))
   .catch(() => console.log("Connexion à MongoDB échouée !"));
@@ -38,7 +38,7 @@ app.use((req, res, next) => {
 });
 
 app.get("/api/furnitures", (req, res) => {
-// voici un middleware qui repond a la requete GET
+  // voici un middleware qui repond a la requete GET
   let query = req.query;
   //on récupère la requête du front (idéalement un objet en JSON qui reprend l'attribut et la valeur du filtre)
   let queryKey = Object.keys(query);
@@ -48,10 +48,12 @@ app.get("/api/furnitures", (req, res) => {
   queryKey = queryKey[0];
   queryValue = queryValue[0];
   //on ajoute un filtre à la méthode find() selon l'attribut et la valeur
-  Furniture.find({ [queryKey]: queryValue }).where('status.onSale').equals(true)
-  //on affiche que les meubles dont le statut est onSale
+  Furniture.find({ [queryKey]: queryValue })
+    .where("status.onSale")
+    .equals(true)
+    //on affiche que les meubles dont le statut est onSale
     .then((furnitures) => res.status(201).json(furnitures))
-    .catch((error) => res.status(400).json({error}));
+    .catch((error) => res.status(400).json({ error }));
 });
 
 app.post("/api/furnitures", (req, res) => {
@@ -83,8 +85,8 @@ app.post("/api/furnitures", (req, res) => {
   });
   furniture
     .save()
-    .then(() => res.status(201).json({message: "Objet enregistré !"}))
-    .catch((error) => res.status(400).json({error}));
+    .then(() => res.status(201).json({ message: "Objet enregistré !" }))
+    .catch((error) => res.status(400).json({ error }));
 });
 
 app.post("/api/validCart", async (req, res) => {
@@ -118,4 +120,31 @@ app.post("/api/validCart", async (req, res) => {
   }
 );
 
+// on importe le model User
+
+const User = require("./models/User");
+
+app.post("/api/users", (req, res) => {
+  const user = new User({
+    firstName: "Delhia",
+    lastName: "Gbelidji",
+    email: "delhia.gb5@gmail.com",
+    password: "lol",
+    phoneNumber: "0607080910",
+    address: "Montreuil",
+    subscriptionDate: Date.now(),
+    status: "client",
+  });
+  user
+    .save()
+    .then(() => res.status(201).json({ message: "Utilisateur enregistré !" }))
+    .catch((error) => res.status(400).json({ error }));
+});
+
+app.get("/api/users", (req, res) => {
+  // on a créer un middleware qui repond a la requete GET
+  User.find()
+    .then((users) => res.status(201).json(users))
+    .catch((error) => res.status(400).json({ error }));
+});
 module.exports = app; // on exporte le module app qu'on récupère dans le serveur
