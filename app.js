@@ -48,7 +48,7 @@ app.get("/api/furnitures", (req, res) => {
   queryKey = queryKey[0];
   queryValue = queryValue[0];
   //on ajoute un filtre à la méthode find() selon l'attribut et la valeur
-  Furniture.find({ [queryKey]: queryValue}).where('status.onSale').equals(true)
+  Furniture.find({ [queryKey]: queryValue }).where('status.onSale').equals(true)
   //on affiche que les meubles dont le statut est onSale
     .then((furnitures) => res.status(201).json(furnitures))
     .catch((error) => res.status(400).json({error}));
@@ -88,8 +88,10 @@ app.post("/api/furnitures", (req, res) => {
 });
 
 app.post("/api/validCart", async (req, res) => {
+  // décommenter la ligne ci-dessous pour supprimer toutes les commandes de la database
+  // Command.collection.deleteMany();
   const command = await Command.create({
-    userId: "6364ef5ddec265547ab60d18",
+    userId: "6364ef5ddec265547ab60d18", // récupérer le userId du headers
     purchaseDate: Date.now(),
     status: "payed"
   });
