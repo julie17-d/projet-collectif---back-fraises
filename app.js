@@ -108,4 +108,5 @@ app.get("/api/users", (req, res) => {
     .then((users) => res.status(201).json(users))
     .catch((error) => res.status(400).json({ error }));
 });
+
 module.exports = app; // on exporte le module app qu'on récupère dans le serveur
