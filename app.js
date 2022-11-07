@@ -7,8 +7,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 // on ajoute le middleware qui vérifient et décodent les token pour les passer aux requêtes
 const auth = require("./middleware/auth");
-//
-const bodyParser = require('body-parser')
+const bodyParser = require("body-parser");
 
 const mongoose = require("mongoose"); // on fait appel au module mongoose qui est un module Node
 
@@ -29,7 +28,7 @@ const Command = require("./models/Command");
 
 // middleware
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({extended: true}));
 
 //Permettre d'accéder à l'API depuis n'importe quelle origine et d'ajouter des headers aux requêtes envoyées à l'API
 app.use((req, res, next) => {
@@ -45,7 +44,7 @@ app.use((req, res, next) => {
   next();
 });
 // on passe l'objet auth pour transmettre le token à la requête
-app.get("/api/furnitures", auth, (req, res) => {
+app.get("/api/furnitures", (req, res) => {
   // voici un middleware qui repond a la requete GET
   let query = req.query;
   // on récupère la requête du front (idéalement un objet en JSON qui reprend l'attribut et la valeur du filtre)
@@ -64,7 +63,7 @@ app.get("/api/furnitures", auth, (req, res) => {
     .catch((error) => res.status(400).json({error}));
 });
 // on passe l'objet auth pour transmettre le token à la requête
-app.post("/api/furnitures", auth, (req, res) => {
+app.post("/api/furnitures", (req, res) => {
   // to delete an entire collection on mongoDB
   // Furniture.collection.deleteMany();
   // on a créer un middleware qui repond a la requete POST
@@ -103,11 +102,11 @@ app.post("/api/validCart", async (req, res) => {
   const command = await Command.create({
     userId: "6364ef5ddec265547ab60d18", // récupérer le userId du headers
     purchaseDate: Date.now(),
-    status: "payed"
+    status: "payed",
   });
   let query = req.body;
   let total = 0;
-  for (let i = 0; i<query.length; i++){
+  for (let i = 0; i < query.length; i++) {
     let id = query[i]._id;
     let title = query[i].title;
     let price = query[i].price;
@@ -117,7 +116,7 @@ app.post("/api/validCart", async (req, res) => {
       id: id,
       title: title,
       price: price,
-      pictureurl: pictureUrl
+      pictureurl: pictureUrl,
     });
   }
   command.totalPrice = total;
@@ -125,13 +124,12 @@ app.post("/api/validCart", async (req, res) => {
     .save()
     .then(() => res.status(201).json({message: "Commande enregistrée !"}))
     .catch((error) => res.status(400).json({error}));
-  }
-);
+});
 
 // on importe le model User
 const User = require("./models/User");
 // on passe l'objet auth pour transmettre le token à la requête
-app.post("/api/users", auth, (req, res) => {
+app.post("/api/users", (req, res) => {
   const user = new User({
     firstName: "Delhia",
     lastName: "Gbelidji",
@@ -149,7 +147,7 @@ app.post("/api/users", auth, (req, res) => {
 });
 
 // on passe l'objet auth pour transmettre le token à la requête
-app.get("/api/users", auth, (req, res) => {
+app.get("/api/users", (req, res) => {
   // on a créer un middleware qui repond a la requete GET
   User.find()
     .then((users) => res.status(201).json(users))
