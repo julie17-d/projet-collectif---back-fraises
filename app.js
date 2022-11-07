@@ -1,11 +1,13 @@
 const express = require("express"); // on importe le module node express
 const app = express(); // on appelle la methode express
+// Tuto OpenClassRoom suivi pour l'implémentation de signup, login et passage de auth => https://openclassrooms.com/fr/courses/6390246-passez-au-full-stack-avec-node-js-express-et-mongodb/6466506-creez-des-utilisateurs et pages suivantes
 // on ajoute le module bcrypt pour crypter les mots de passe des users
 const bcrypt = require("bcrypt");
 // on ajoute le module jsonwebtoken pour créer des token et les vérifier
 const jwt = require("jsonwebtoken");
 // on ajoute le middleware qui vérifient et décodent les token pour les passer aux requêtes
 const auth = require("./middleware/auth");
+//
 
 const mongoose = require("mongoose"); // on fait appel au module mongoose qui est un module Node
 
@@ -88,7 +90,6 @@ app.post("/api/furnitures", auth, (req, res) => {
 });
 
 // on importe le model User
-
 const User = require("./models/User");
 // on passe l'objet auth pour transmettre le token à la requête
 app.post("/api/users", auth, (req, res) => {
@@ -119,7 +120,7 @@ app.get("/api/users", auth, (req, res) => {
 // on crée un endpoint pour l'authentification signup
 app.post("/api/auth/signup", (req, res) => {
   bcrypt
-    .hash("Test3", 10) //req.body.password à la place de "Test3" quand info reçue du front
+    .hash("Test3", 10) //req.body.password à la place de "Test3" quand info reçue du front/ 10 => nombre
     .then((hash) => {
       const user = new User({
         firstName: "Test3", // firstName: req.body.firstName
@@ -145,7 +146,7 @@ app.post("/api/auth/login", (req, res) => {
     .then((user) => {
       if (user === null) {
         res
-          .status(401)
+          .status(401) // statut unauthorized
           .json({message: "Paire identifiants mot de passe incorrecte"});
       } else {
         bcrypt

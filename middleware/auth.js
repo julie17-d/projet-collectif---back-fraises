@@ -1,3 +1,4 @@
+// Tuto OpenClassRoom suivi pour l'implémentation du middleware => https://openclassrooms.com/fr/courses/6390246-passez-au-full-stack-avec-node-js-express-et-mongodb/6466605-configurez-le-middleware-dauthentification
 // on ajoute le module jsonwebtoken pour créer des token et les vérifier
 const jwt = require("jsonwebtoken");
 
