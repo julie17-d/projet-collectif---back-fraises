@@ -1,5 +1,6 @@
 const express = require("express"); // on importe le module node express
 const app = express(); // on appelle la methode express
+const bodyParser = require('body-parser')
 
 const mongoose = require("mongoose"); // on fait appel au module mongoose qui est un module Node
 
@@ -14,6 +15,13 @@ mongoose
 
 //On ajoute le model Furniture
 const Furniture = require("./models/Furniture");
+
+//On ajoute le model Command
+const Command = require("./models/Command");
+
+// middleware
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 //Permettre d'accéder à l'API depuis n'importe quelle origine et d'ajouter des headers aux requêtes envoyées à l'API
 app.use((req, res, next) => {
@@ -80,6 +88,37 @@ app.post("/api/furnitures", (req, res) => {
     .then(() => res.status(201).json({message: "Objet enregistré !"}))
     .catch((error) => res.status(400).json({error}));
 });
+
+app.post("/api/validCart", async (req, res) => {
+  // décommenter la ligne ci-dessous pour supprimer toutes les commandes de la database
+  // Command.collection.deleteMany();
+  const command = await Command.create({
+    userId: "6364ef5ddec265547ab60d18", // récupérer le userId du headers
+    purchaseDate: Date.now(),
+    status: "payed"
+  });
+  let query = req.body;
+  let total = 0;
+  for (let i = 0; i<query.length; i++){
+    let id = query[i]._id;
+    let title = query[i].title;
+    let price = query[i].price;
+    let pictureUrl = query[i].pictureUrl;
+    total += price;
+    command.furnituresDetails.push({
+      id: id,
+      title: title,
+      price: price,
+      pictureurl: pictureUrl
+    });
+  }
+  command.totalPrice = total;
+  await command
+    .save()
+    .then(() => res.status(201).json({message: "Commande enregistrée !"}))
+    .catch((error) => res.status(400).json({error}));
+  }
+);
 
 // on importe le model User
 
