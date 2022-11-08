@@ -14,7 +14,7 @@ const mongoose = require("mongoose"); // on fait appel au module mongoose qui es
 mongoose
   .connect(
     "mongodb+srv://fraises:back@cluster0.iutroww.mongodb.net/?retryWrites=true&w=majority",
-    {useNewUrlParser: true, useUnifiedTopology: true}
+    { useNewUrlParser: true, useUnifiedTopology: true }
   ) // Methode "connect()" de mongoose qui permet de se connecter à la BDD mongoDB atlas (cloud)
   .then(() => console.log("Connexion à MongoDB réussie !"))
   .catch(() => console.log("Connexion à MongoDB échouée !"));
@@ -28,7 +28,7 @@ const Command = require("./models/Command");
 
 // middleware
 app.use(express.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 //Permettre d'accéder à l'API depuis n'importe quelle origine et d'ajouter des headers aux requêtes envoyées à l'API
 app.use((req, res, next) => {
@@ -56,12 +56,12 @@ app.get("/api/furnitures", (req, res) => {
   queryKey = queryKey[0];
   queryValue = queryValue[0];
   // on ajoute un filtre à la méthode find() selon l'attribut et la valeur
-  Furniture.find({[queryKey]: queryValue})
+  Furniture.find({ [queryKey]: queryValue })
     .where("status.onSale")
     .equals(true)
     // on affiche que les meubles dont le statut est onSale
     .then((furnitures) => res.status(201).json(furnitures))
-    .catch((error) => res.status(400).json({error}));
+    .catch((error) => res.status(400).json({ error }));
 });
 
 // on passe l'objet auth pour transmettre le token à la requête
@@ -94,8 +94,8 @@ app.post("/api/addFurniture", (req, res) => {
   });
   furniture
     .save()
-    .then(() => res.status(201).json({message: "Objet enregistré !"}))
-    .catch((error) => res.status(400).json({error}));
+    .then(() => res.status(201).json({ message: "Objet enregistré !" }))
+    .catch((error) => res.status(400).json({ error }));
 });
 
 app.post("/api/validCart", async (req, res) => {
@@ -124,88 +124,89 @@ app.post("/api/validCart", async (req, res) => {
   command.totalPrice = total;
   await command
     .save()
-    .then(() => res.status(201).json({message: "Commande enregistrée !"}))
-    .catch((error) => res.status(400).json({error}));
+    .then(() => res.status(201).json({ message: "Commande enregistrée !" }))
+    .catch((error) => res.status(400).json({ error }));
 });
 
 // on importe le model User
 const User = require("./models/User");
-// on passe l'objet auth pour transmettre le token à la requête
-app.post("/api/addUser", (req, res) => {
-  const query = req.body
-  const user = new User({
-    firstName: query.firstName,
-    lastName: query.lastName,
-    email: query.email,
-    password: query.password,
-    phoneNumber: query.phoneNumber,
-    address: query.address,
-    subscriptionDate: Date.now(),
-    status: "client",
-  });
-  user
-    .save()
-    .then(() => res.status(201).json({message: "Utilisateur enregistré !"}))
-    .catch((error) => res.status(400).json({error}));
-});
+// // on passe l'objet auth pour transmettre le token à la requête
+// app.post("/api/addUser", (req, res) => {
+//   const query = req.body
+//   const user = new User({
+//     firstName: query.firstName,
+//     lastName: query.lastName,
+//     email: query.email,
+//     password: query.password,
+//     phoneNumber: query.phoneNumber,
+//     address: query.address,
+//     subscriptionDate: Date.now(),
+//     status: "client",
+//   });
+//   user
+//     .save()
+//     .then(() => res.status(201).json({message: "Utilisateur enregistré !"}))
+//     .catch((error) => res.status(400).json({error}));
+// });
 
 // on passe l'objet auth pour transmettre le token à la requête
 app.get("/api/users", (req, res) => {
   // on a créer un middleware qui repond a la requete GET
   User.find()
     .then((users) => res.status(201).json(users))
-    .catch((error) => res.status(400).json({error}));
+    .catch((error) => res.status(400).json({ error }));
 });
 
 // on crée un endpoint pour l'authentification signup
 app.post("/api/auth/signup", (req, res) => {
+  const query = req.body
   bcrypt
-    .hash("Test3", 10) //req.body.password à la place de "Test3" quand info reçue du front/ 10 => nombre
+    .hash(query.password, 10) //req.body.password à la place de "Test3" quand info reçue du front/ 10 => nombre
     .then((hash) => {
       const user = new User({
-        firstName: "Test3", // firstName: req.body.firstName
-        lastName: "Test3", // lastName: req.body.lastName
-        email: "test3@gmail.com", // email:req.body.email
+        firstName: query.firstName, // firstName: req.body.firstName
+        lastName: query.lastName, // lastName: req.body.lastName
+        email: query.email, // email:req.body.email
         password: hash, // reste comme ça
-        phoneNumber: 600000000, // phoneNumber : req.body.phoneNumber
-        address: "Test3", // address:req.body.address
+        phoneNumber: query.phoneNumber, // phoneNumber : req.body.phoneNumber
+        address: query.address, // address:req.body.address
         subscriptionDate: Date.now(), // reste comme ça
         status: "client", // status : req.body.status
       });
       user
         .save()
-        .then(() => res.status(201).json({message: "utilisateur créé"}))
-        .catch((error) => res.status(400).json({error}));
+        .then(() => res.status(201).json({ message: "utilisateur créé" }))
+        .catch((error) => res.status(400).json({ error }));
     })
-    .catch((error) => res.status(500).json({error}));
+    .catch((error) => res.status(500).json({ error }));
 });
 
 // on crée un endpoint pour l'authentification login
 app.post("/api/auth/login", (req, res) => {
-  User.findOne({email: "test3@gmail.com"}) //req.body.email quand info reçue du front
+  User.findOne({ email: req.body.email }) //req.body.email quand info reçue du front
     .then((user) => {
       if (user === null) {
         res
           .status(401) // statut unauthorized
-          .json({message: "Paire identifiants mot de passe incorrecte"});
+          .json({ message: "Paire identifiants mot de passe incorrecte" });
       } else {
         bcrypt
           .compare(
-            "Test3", // req.body.password quand info reçue du front
+            req.body.password, // req.body.password quand info reçue du front
             user.password
           )
           .then((valid) => {
             if (!valid) {
               res
                 .status(401)
-                .json({message: "Paire identifiants mot de passe incorrecte"});
+                .json({ message: "Paire identifiants mot de passe incorrecte" });
             } else {
               res.status(200).json({
                 userId: user._id,
                 token: jwt.sign(
-                  {userId: user._id}, // données à encoder à l'interieur du token => on appelle ça le "payload". On encode le userId car si on crée un objet avec un user, on ne doit pas pouvoir le modifier avec un autre user. Le userId encodé sera utilisé pour appliquer le bon userId à chaque objet pourqu'il ne puisse être modifié que par le user qui l'a créé.
+                  { userId: user._id }, // données à encoder à l'interieur du token => on appelle ça le "payload". On encode le userId car si on crée un objet avec un user, on ne doit pas pouvoir le modifier avec un autre user. Le userId encodé sera utilisé pour appliquer le bon userId à chaque objet pourqu'il ne puisse être modifié que par le user qui l'a créé.
                   "RANDOM_TOKEN_SECRET", // clé secrète pour l'encodage => ici, un secret simple est créé car on est en dév et pas en prod.
-                  {expiresIn: "24h"} // ici, expiration pour le token de 24h
+                  { expiresIn: "24h" } // ici, expiration pour le token de 24h
                 ),
               }); // ça donne ça :
               // {
@@ -215,12 +216,12 @@ app.post("/api/auth/login", (req, res) => {
             }
           })
           .catch((error) => {
-            res.status(500).json({error});
+            res.status(500).json({ error });
           });
       }
     })
     .catch((error) => {
-      req.status(500).json({error});
+      req.status(500).json({ error });
     });
 });
 
