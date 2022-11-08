@@ -43,6 +43,7 @@ app.use((req, res, next) => {
   );
   next();
 });
+
 // on passe l'objet auth pour transmettre le token à la requête
 app.get("/api/furnitures", (req, res) => {
   // voici un middleware qui repond a la requete GET
@@ -62,8 +63,9 @@ app.get("/api/furnitures", (req, res) => {
     .then((furnitures) => res.status(201).json(furnitures))
     .catch((error) => res.status(400).json({error}));
 });
+
 // on passe l'objet auth pour transmettre le token à la requête
-app.post("/api/furnitures", (req, res) => {
+app.post("/api/addFurniture", (req, res) => {
   // to delete an entire collection on mongoDB
   // Furniture.collection.deleteMany();
   // on a créer un middleware qui repond a la requete POST
@@ -129,14 +131,15 @@ app.post("/api/validCart", async (req, res) => {
 // on importe le model User
 const User = require("./models/User");
 // on passe l'objet auth pour transmettre le token à la requête
-app.post("/api/users", (req, res) => {
+app.post("/api/addUser", (req, res) => {
+  const query = req.body
   const user = new User({
-    firstName: "Delhia",
-    lastName: "Gbelidji",
-    email: "delhia.gb5@gmail.com",
-    password: "lol",
-    phoneNumber: "0607080910",
-    address: "Montreuil",
+    firstName: query.firstName,
+    lastName: query.lastName,
+    email: query.email,
+    password: query.password,
+    phoneNumber: query.phoneNumber,
+    address: query.address,
     subscriptionDate: Date.now(),
     status: "client",
   });
