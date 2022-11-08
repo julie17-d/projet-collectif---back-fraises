@@ -215,6 +215,7 @@ app.post("/api/auth/login", (req, res) => {
               // }
             }
           })
+          .then((data) => {window.localStorage.setItem("token", JSON.stringify(token))})
           .catch((error) => {
             res.status(500).json({ error });
           });
