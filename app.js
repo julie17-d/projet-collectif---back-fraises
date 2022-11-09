@@ -159,7 +159,7 @@ app.get("/api/users", (req, res) => {
 
 // on crée un endpoint pour l'authentification signup
 app.post("/api/auth/signup", (req, res) => {
-  const query = req.body
+  const query = req.body.user
   bcrypt
     .hash(query.password, 10) //req.body.password à la place de "Test3" quand info reçue du front/ 10 => nombre
     .then((hash) => {
@@ -215,7 +215,6 @@ app.post("/api/auth/login", (req, res) => {
               // }
             }
           })
-          .then((data) => {window.localStorage.setItem("token", JSON.stringify(token))})
           .catch((error) => {
             res.status(500).json({ error });
           });
