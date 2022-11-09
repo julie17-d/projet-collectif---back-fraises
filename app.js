@@ -198,7 +198,7 @@ app.post("/api/auth/signup", (req, res) => {
 
 // on crée un endpoint pour l'authentification login
 app.post("/api/auth/login", (req, res) => {
-  User.findOne({ email: req.body.email }) //req.body.email quand info reçue du front
+  User.findOne({ email: req.body.user.email }) //req.body.email quand info reçue du front
     .then((user) => {
       if (user === null) {
         res
@@ -207,7 +207,7 @@ app.post("/api/auth/login", (req, res) => {
       } else {
         bcrypt
           .compare(
-            req.body.password, // req.body.password quand info reçue du front
+            req.body.user.password, // req.body.password quand info reçue du front
             user.password
           )
           .then((valid) => {
