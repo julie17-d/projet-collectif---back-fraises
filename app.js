@@ -8,14 +8,14 @@ const jwt = require("jsonwebtoken");
 // on ajoute le middleware qui vérifient et décodent les token pour les passer aux requêtes
 const auth = require("./middleware/auth");
 //
-const bodyParser = require('body-parser')
+const bodyParser = require("body-parser");
 
 const mongoose = require("mongoose"); // on fait appel au module mongoose qui est un module Node
 
 mongoose
   .connect(
     "mongodb+srv://fraises:back@cluster0.iutroww.mongodb.net/?retryWrites=true&w=majority",
-    {useNewUrlParser: true, useUnifiedTopology: true}
+    { useNewUrlParser: true, useUnifiedTopology: true }
   ) // Methode "connect()" de mongoose qui permet de se connecter à la BDD mongoDB atlas (cloud)
   .then(() => console.log("Connexion à MongoDB réussie !"))
   .catch(() => console.log("Connexion à MongoDB échouée !"));
@@ -45,7 +45,7 @@ app.use((req, res, next) => {
   next();
 });
 // on passe l'objet auth pour transmettre le token à la requête
-app.get("/api/furnitures", auth, (req, res) => {
+app.get("/api/furnitures", (req, res) => {
   // voici un middleware qui repond a la requete GET
   let query = req.query;
   // on récupère la requête du front (idéalement un objet en JSON qui reprend l'attribut et la valeur du filtre)
@@ -56,15 +56,15 @@ app.get("/api/furnitures", auth, (req, res) => {
   queryKey = queryKey[0];
   queryValue = queryValue[0];
   // on ajoute un filtre à la méthode find() selon l'attribut et la valeur
-  Furniture.find({[queryKey]: queryValue})
+  Furniture.find({ [queryKey]: queryValue })
     .where("status.onSale")
     .equals(true)
     // on affiche que les meubles dont le statut est onSale
     .then((furnitures) => res.status(201).json(furnitures))
-    .catch((error) => res.status(400).json({error}));
+    .catch((error) => res.status(400).json({ error }));
 });
 // on passe l'objet auth pour transmettre le token à la requête
-app.post("/api/furnitures", auth, (req, res) => {
+app.post("/api/furnitures", (req, res) => {
   // to delete an entire collection on mongoDB
   // Furniture.collection.deleteMany();
   // on a créer un middleware qui repond a la requete POST
@@ -93,8 +93,8 @@ app.post("/api/furnitures", auth, (req, res) => {
   });
   furniture
     .save()
-    .then(() => res.status(201).json({message: "Objet enregistré !"}))
-    .catch((error) => res.status(400).json({error}));
+    .then(() => res.status(201).json({ message: "Objet enregistré !" }))
+    .catch((error) => res.status(400).json({ error }));
 });
 
 app.post("/api/validCart", async (req, res) => {
@@ -103,11 +103,11 @@ app.post("/api/validCart", async (req, res) => {
   const command = await Command.create({
     userId: "6364ef5ddec265547ab60d18", // récupérer le userId du headers
     purchaseDate: Date.now(),
-    status: "payed"
+    status: "payed",
   });
   let query = req.body;
   let total = 0;
-  for (let i = 0; i<query.length; i++){
+  for (let i = 0; i < query.length; i++) {
     let id = query[i]._id;
     let title = query[i].title;
     let price = query[i].price;
@@ -117,21 +117,20 @@ app.post("/api/validCart", async (req, res) => {
       id: id,
       title: title,
       price: price,
-      pictureurl: pictureUrl
+      pictureurl: pictureUrl,
     });
   }
   command.totalPrice = total;
   await command
     .save()
-    .then(() => res.status(201).json({message: "Commande enregistrée !"}))
-    .catch((error) => res.status(400).json({error}));
-  }
-);
+    .then(() => res.status(201).json({ message: "Commande enregistrée !" }))
+    .catch((error) => res.status(400).json({ error }));
+});
 
 // on importe le model User
 const User = require("./models/User");
 // on passe l'objet auth pour transmettre le token à la requête
-app.post("/api/users", auth, (req, res) => {
+app.post("/api/users", (req, res) => {
   const user = new User({
     firstName: "Delhia",
     lastName: "Gbelidji",
@@ -144,16 +143,16 @@ app.post("/api/users", auth, (req, res) => {
   });
   user
     .save()
-    .then(() => res.status(201).json({message: "Utilisateur enregistré !"}))
-    .catch((error) => res.status(400).json({error}));
+    .then(() => res.status(201).json({ message: "Utilisateur enregistré !" }))
+    .catch((error) => res.status(400).json({ error }));
 });
 
 // on passe l'objet auth pour transmettre le token à la requête
-app.get("/api/users", auth, (req, res) => {
+app.get("/api/users", (req, res) => {
   // on a créer un middleware qui repond a la requete GET
   User.find()
     .then((users) => res.status(201).json(users))
-    .catch((error) => res.status(400).json({error}));
+    .catch((error) => res.status(400).json({ error }));
 });
 
 // on crée un endpoint pour l'authentification signup
@@ -173,20 +172,20 @@ app.post("/api/auth/signup", (req, res) => {
       });
       user
         .save()
-        .then(() => res.status(201).json({message: "utilisateur créé"}))
-        .catch((error) => res.status(400).json({error}));
+        .then(() => res.status(201).json({ message: "utilisateur créé" }))
+        .catch((error) => res.status(400).json({ error }));
     })
-    .catch((error) => res.status(500).json({error}));
+    .catch((error) => res.status(500).json({ error }));
 });
 
 // on crée un endpoint pour l'authentification login
 app.post("/api/auth/login", (req, res) => {
-  User.findOne({email: "test3@gmail.com"}) //req.body.email quand info reçue du front
+  User.findOne({ email: "test3@gmail.com" }) //req.body.email quand info reçue du front
     .then((user) => {
       if (user === null) {
         res
           .status(401) // statut unauthorized
-          .json({message: "Paire identifiants mot de passe incorrecte"});
+          .json({ message: "Paire identifiants mot de passe incorrecte" });
       } else {
         bcrypt
           .compare(
@@ -197,14 +196,16 @@ app.post("/api/auth/login", (req, res) => {
             if (!valid) {
               res
                 .status(401)
-                .json({message: "Paire identifiants mot de passe incorrecte"});
+                .json({
+                  message: "Paire identifiants mot de passe incorrecte",
+                });
             } else {
               res.status(200).json({
                 userId: user._id,
                 token: jwt.sign(
-                  {userId: user._id}, // données à encoder à l'interieur du token => on appelle ça le "payload". On encode le userId car si on crée un objet avec un user, on ne doit pas pouvoir le modifier avec un autre user. Le userId encodé sera utilisé pour appliquer le bon userId à chaque objet pourqu'il ne puisse être modifié que par le user qui l'a créé.
+                  { userId: user._id }, // données à encoder à l'interieur du token => on appelle ça le "payload". On encode le userId car si on crée un objet avec un user, on ne doit pas pouvoir le modifier avec un autre user. Le userId encodé sera utilisé pour appliquer le bon userId à chaque objet pourqu'il ne puisse être modifié que par le user qui l'a créé.
                   "RANDOM_TOKEN_SECRET", // clé secrète pour l'encodage => ici, un secret simple est créé car on est en dév et pas en prod.
-                  {expiresIn: "24h"} // ici, expiration pour le token de 24h
+                  { expiresIn: "24h" } // ici, expiration pour le token de 24h
                 ),
               }); // ça donne ça :
               // {
@@ -214,12 +215,12 @@ app.post("/api/auth/login", (req, res) => {
             }
           })
           .catch((error) => {
-            res.status(500).json({error});
+            res.status(500).json({ error });
           });
       }
     })
     .catch((error) => {
-      req.status(500).json({error});
+      req.status(500).json({ error });
     });
 });
 
