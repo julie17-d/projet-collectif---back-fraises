@@ -7,7 +7,6 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 // on ajoute le middleware qui vérifient et décodent les token pour les passer aux requêtes
 const auth = require("./middleware/auth");
-//
 const bodyParser = require("body-parser");
 
 const mongoose = require("mongoose"); // on fait appel au module mongoose qui est un module Node
@@ -44,6 +43,7 @@ app.use((req, res, next) => {
   );
   next();
 });
+
 // on passe l'objet auth pour transmettre le token à la requête
 app.get("/api/furnitures", (req, res) => {
   // voici un middleware qui repond a la requete GET
@@ -63,8 +63,9 @@ app.get("/api/furnitures", (req, res) => {
     .then((furnitures) => res.status(201).json(furnitures))
     .catch((error) => res.status(400).json({ error }));
 });
+
 // on passe l'objet auth pour transmettre le token à la requête
-app.post("/api/furnitures", (req, res) => {
+app.post("/api/addFurniture", (req, res) => {
   // to delete an entire collection on mongoDB
   // Furniture.collection.deleteMany();
   // on a créer un middleware qui repond a la requete POST
@@ -129,23 +130,24 @@ app.post("/api/validCart", async (req, res) => {
 
 // on importe le model User
 const User = require("./models/User");
-// on passe l'objet auth pour transmettre le token à la requête
-app.post("/api/users", (req, res) => {
-  const user = new User({
-    firstName: "Delhia",
-    lastName: "Gbelidji",
-    email: "delhia.gb5@gmail.com",
-    password: "lol",
-    phoneNumber: "0607080910",
-    address: "Montreuil",
-    subscriptionDate: Date.now(),
-    status: "client",
-  });
-  user
-    .save()
-    .then(() => res.status(201).json({ message: "Utilisateur enregistré !" }))
-    .catch((error) => res.status(400).json({ error }));
-});
+// // on passe l'objet auth pour transmettre le token à la requête
+// app.post("/api/addUser", (req, res) => {
+//   const query = req.body
+//   const user = new User({
+//     firstName: query.firstName,
+//     lastName: query.lastName,
+//     email: query.email,
+//     password: query.password,
+//     phoneNumber: query.phoneNumber,
+//     address: query.address,
+//     subscriptionDate: Date.now(),
+//     status: "client",
+//   });
+//   user
+//     .save()
+//     .then(() => res.status(201).json({message: "Utilisateur enregistré !"}))
+//     .catch((error) => res.status(400).json({error}));
+// });
 
 // on passe l'objet auth pour transmettre le token à la requête
 app.get("/api/users", (req, res) => {
@@ -157,16 +159,17 @@ app.get("/api/users", (req, res) => {
 
 // on crée un endpoint pour l'authentification signup
 app.post("/api/auth/signup", (req, res) => {
+  const query = req.body.user;
   bcrypt
-    .hash("Test3", 10) //req.body.password à la place de "Test3" quand info reçue du front/ 10 => nombre
+    .hash(query.password, 10) //req.body.password à la place de "Test3" quand info reçue du front/ 10 => nombre
     .then((hash) => {
       const user = new User({
-        firstName: "Test3", // firstName: req.body.firstName
-        lastName: "Test3", // lastName: req.body.lastName
-        email: "test3@gmail.com", // email:req.body.email
+        firstName: query.firstName, // firstName: req.body.firstName
+        lastName: query.lastName, // lastName: req.body.lastName
+        email: query.email, // email:req.body.email
         password: hash, // reste comme ça
-        phoneNumber: 600000000, // phoneNumber : req.body.phoneNumber
-        address: "Test3", // address:req.body.address
+        phoneNumber: query.phoneNumber, // phoneNumber : req.body.phoneNumber
+        address: query.address, // address:req.body.address
         subscriptionDate: Date.now(), // reste comme ça
         status: "client", // status : req.body.status
       });
@@ -180,7 +183,7 @@ app.post("/api/auth/signup", (req, res) => {
 
 // on crée un endpoint pour l'authentification login
 app.post("/api/auth/login", (req, res) => {
-  User.findOne({ email: "test3@gmail.com" }) //req.body.email quand info reçue du front
+  User.findOne({ email: req.body.user.email }) //req.body.email quand info reçue du front
     .then((user) => {
       if (user === null) {
         res
@@ -189,7 +192,7 @@ app.post("/api/auth/login", (req, res) => {
       } else {
         bcrypt
           .compare(
-            "Test3", // req.body.password quand info reçue du front
+            req.body.user.password, // req.body.password quand info reçue du front
             user.password
           )
           .then((valid) => {
@@ -213,6 +216,9 @@ app.post("/api/auth/login", (req, res) => {
               //    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzY1MjcyMTEyN2Q4NzViY2QwYWIwN2UiLCJpYXQiOjE2Njc1NzM5NzYsImV4cCI6MTY2NzY2MDM3Nn0.SgVfVoG-O7CLRVdFYdkr5iv8EleOeMb1J4RaE_k1e-I"
               // }
             }
+          })
+          .then((data) => {
+            window.localStorage.setItem("token", JSON.stringify(token));
           })
           .catch((error) => {
             res.status(500).json({ error });
