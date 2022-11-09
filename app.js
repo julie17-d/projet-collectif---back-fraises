@@ -181,7 +181,7 @@ app.get("/api/users", (req, res) => {
 
 // on crée un endpoint pour l'authentification signup
 app.post("/api/auth/signup", (req, res) => {
-  const query = req.body.user
+  const query = req.body.user;
   bcrypt
     .hash(query.password, 10) //req.body.password à la place de "Test3" quand info reçue du front/ 10 => nombre
     .then((hash) => {
@@ -221,7 +221,9 @@ app.post("/api/auth/login", (req, res) => {
             if (!valid) {
               res
                 .status(401)
-                .json({ message: "Paire identifiants mot de passe incorrecte" });
+                .json({
+                  message: "Paire identifiants mot de passe incorrecte",
+                });
             } else {
               res.status(200).json({
                 userId: user._id,
@@ -237,7 +239,9 @@ app.post("/api/auth/login", (req, res) => {
               // }
             }
           })
-          .then((data) => {window.localStorage.setItem("token", JSON.stringify(token))})
+          .then((data) => {
+            window.localStorage.setItem("token", JSON.stringify(token));
+          })
           .catch((error) => {
             res.status(500).json({ error });
           });
