@@ -120,6 +120,20 @@ app.post("/api/validCart", async (req, res) => {
       price: price,
       pictureurl: pictureUrl,
     });
+
+  //   Furniture.findOneAndUpdate({_id: id}, {"status.onSale":false}, {upsert: false}, function(err, doc) {
+  //     if (err) return res.send(500, {error: err});
+  // });
+  Furniture.findOneAndUpdate(
+    { _id: id},
+    {"status.onSale":false} ,
+    { new: true },
+    (err, order) => {
+    if (err) {
+        return res.status(400).json({error: "Cannot update order status"});
+    }
+    res.json(order);
+    });
   }
   command.totalPrice = total;
   await command
@@ -130,6 +144,7 @@ app.post("/api/validCart", async (req, res) => {
 
 // on importe le model User
 const User = require("./models/User");
+const { updateOne } = require("./models/Furniture");
 // // on passe l'objet auth pour transmettre le token à la requête
 // app.post("/api/addUser", (req, res) => {
 //   const query = req.body
@@ -159,7 +174,7 @@ app.get("/api/users", (req, res) => {
 
 // on crée un endpoint pour l'authentification signup
 app.post("/api/auth/signup", (req, res) => {
-  const query = req.body
+  const query = req.body.user
   bcrypt
     .hash(query.password, 10) //req.body.password à la place de "Test3" quand info reçue du front/ 10 => nombre
     .then((hash) => {
