@@ -64,6 +64,12 @@ app.get("/api/furnitures", (req, res) => {
     .catch((error) => res.status(400).json({ error }));
 });
 
+app.get("/api/allFurnitures", (req, res) => {
+  Furniture.find()
+    .then((furnitures) => res.status(201).json(furnitures))
+    .catch((error) => res.status(400).json({ error }));
+});
+
 // on passe l'objet auth pour transmettre le token à la requête
 app.post("/api/addFurniture", (req, res) => {
   // to delete an entire collection on mongoDB
@@ -124,6 +130,7 @@ app.post("/api/validCart", async (req, res) => {
   //   Furniture.findOneAndUpdate({_id: id}, {"status.onSale":false}, {upsert: false}, function(err, doc) {
   //     if (err) return res.send(500, {error: err});
   // });
+  console.log(id, title);
   Furniture.findOneAndUpdate(
     { _id: id},
     {"status.onSale":false} ,
