@@ -174,7 +174,7 @@ app.post("/api/validCart", async (req, res) => {
 // on importe le model User
 const User = require("./models/User");
 const { updateOne } = require("./models/Furniture");
-// // on passe l'objet auth pour transmettre le token à la requête
+  // // on passe l'objet auth pour transmettre le token à la requête
 // app.post("/api/addUser", (req, res) => {
 //   const query = req.body
 //   const user = new User({
@@ -249,7 +249,10 @@ app.post("/api/auth/login", (req, res) => {
             } else {
               res.status(200).json({
                 firstName: user.firstName,
+<<<<<<< HEAD
                 userId: user._id,
+=======
+>>>>>>> f0c644152443722125991beda2db5f9b136c46ae
                 token: jwt.sign(
                   { userId: user._id }, // données à encoder à l'interieur du token => on appelle ça le "payload". On encode le userId car si on crée un objet avec un user, on ne doit pas pouvoir le modifier avec un autre user. Le userId encodé sera utilisé pour appliquer le bon userId à chaque objet pourqu'il ne puisse être modifié que par le user qui l'a créé.
                   "RANDOM_TOKEN_SECRET", // clé secrète pour l'encodage => ici, un secret simple est créé car on est en dév et pas en prod.
