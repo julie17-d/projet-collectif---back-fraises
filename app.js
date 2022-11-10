@@ -120,12 +120,42 @@ app.post("/api/validCart", async (req, res) => {
       price: price,
       pictureurl: pictureUrl,
     });
+
+    // Furniture.findOneAndUpdate({ _id: id },{"$set": { "status.sold": true } },{returnOriginal: false});
+    // Furniture.findOneAndUpdate({ _id: id },{"$set": { "status.onSale": false } },{returnOriginal: false})
+    // await Furniture.findOneAndUpdate({'_id': id}, {"status.sold": true});
+    // await Furniture.findOneAndUpdate({'_id': id}, { "status.onSale": false});
+    // Furniture.findOneAndUpdate({'_id': id}, {"$set": { "status.onSale": false}, "$set": {"status.sold": true}});
+    // return res.send('Succesfully saved.');
+    // });
   }
-  command.totalPrice = total;
-  await command
-    .save()
-    .then(() => res.status(201).json({ message: "Commande enregistrée !" }))
-    .catch((error) => res.status(400).json({ error }));
+
+  const updateFurnitures = query.map((record) => {
+    const updateFurniture = {
+      'updateOne': {
+        'filter': {
+          _id: record._id,
+        },
+        'update': {
+          $set:
+          {
+            'status.onSale': false,
+            'status.sold': true
+          }
+        },
+      }
+    }
+    return updateFurniture
+  })
+  
+  await Furniture.bulkWrite(updateFurnitures)
+    .then(async () => {
+      command.totalPrice = total;
+      await command
+        .save()
+        .then(() => res.status(201).json({ message: "Commande enregistrée !" }))
+        .catch((error) => res.status(400).json({ error }));
+    })
 });
 
 // on importe le model User
