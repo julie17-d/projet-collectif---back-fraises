@@ -174,7 +174,8 @@ app.post("/api/validCart", async (req, res) => {
 // on importe le model User
 const User = require("./models/User");
 const { updateOne } = require("./models/Furniture");
-  // // on passe l'objet auth pour transmettre le token à la requête
+const { application } = require("express");
+// // on passe l'objet auth pour transmettre le token à la requête
 // app.post("/api/addUser", (req, res) => {
 //   const query = req.body
 //   const user = new User({
@@ -249,10 +250,7 @@ app.post("/api/auth/login", (req, res) => {
             } else {
               res.status(200).json({
                 firstName: user.firstName,
-<<<<<<< HEAD
                 userId: user._id,
-=======
->>>>>>> f0c644152443722125991beda2db5f9b136c46ae
                 token: jwt.sign(
                   { userId: user._id }, // données à encoder à l'interieur du token => on appelle ça le "payload". On encode le userId car si on crée un objet avec un user, on ne doit pas pouvoir le modifier avec un autre user. Le userId encodé sera utilisé pour appliquer le bon userId à chaque objet pourqu'il ne puisse être modifié que par le user qui l'a créé.
                   "RANDOM_TOKEN_SECRET", // clé secrète pour l'encodage => ici, un secret simple est créé car on est en dév et pas en prod.
@@ -277,5 +275,22 @@ app.post("/api/auth/login", (req, res) => {
       req.status(500).json({ error });
     });
 });
+
+app.put("/api/updatestatus", async (req, res) => {
+  const query = req.body;
+
+  const id = query.id;
+  let onSale = query.onSale;
+  let pending = query.pending;
+  let sold = query.sold;
+
+  if (onSale === undefined) { onSale = false };
+  if (pending === undefined) { pending = false };
+  if (sold === undefined) { sold = false };
+
+  await Furniture.findOneAndUpdate({ _id: id }, { "status.onSale": onSale, "status.pending": pending, "status.sold": sold }, { upsert: false })
+    .then((updates) => res.status(201).json("Status updated."))
+    .catch((error) => res.status(400).json({ error }));
+})
 
 module.exports = app; // on exporte le module app qu'on récupère dans le serveur
