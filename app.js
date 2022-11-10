@@ -72,43 +72,48 @@ app.get("/api/allFurnitures", (req, res) => {
 
 // on passe l'objet auth pour transmettre le token à la requête
 app.post("/api/addFurniture", (req, res) => {
+  const query = req.body.furniture
+  console.log(query);
   // to delete an entire collection on mongoDB
   // Furniture.collection.deleteMany();
   // on a créer un middleware qui repond a la requete POST
   const furniture = new Furniture({
-    title: "Canapé-lit Clémentine",
-    type: "assise",
+    title: query.title,
+    type: query.type,
     description:
-      "Que vous ayez une envie de vous assoupir ou de savourer une tasse de thé, le canapé-lit Clémentine sera toujours là pour combler vos besoins.",
+      query.description,
     dimensions_cm: {
-      height: 80,
-      width: 240,
-      depth: 80,
+      height: query.height,
+      width: query.width,
+      depth: query.depth,
     },
-    materials: ["textile"],
-    colors: "jaune",
+    materials: query.materials,
+    colors: query.colors,
     pictureUrl:
-      "https://assets.loaf.com/images/hero_large/4833611-squisharoo.jpg",
-    price: 950,
+      "https://www.petiteamelie.fr/lit-de-bebe-evolutif-blanc-70x140-bosque.html",
+    price: query.price,
     status: {
-      onSale: true,
-      pending: false,
+      onSale: false,
+      pending: true,
       sold: false,
     },
-    seller: "Lauréline Fleury",
+    seller: query.seller,
     date: Date.now(),
   });
   furniture
     .save()
     .then(() => res.status(201).json({ message: "Objet enregistré !" }))
-    .catch((error) => res.status(400).json({ error }));
+    .catch((error) => {
+      //console.log(error)
+      res.status(400).json({ error })
+    });
 });
 
 app.post("/api/validCart", async (req, res) => {
   // décommenter la ligne ci-dessous pour supprimer toutes les commandes de la database
   // Command.collection.deleteMany();
   const command = await Command.create({
-    userId: "6364ef5ddec265547ab60d18", // récupérer le userId du headers
+    userId: req.body.userId, // récupérer le userId du headers
     purchaseDate: Date.now(),
     status: "payed",
   });
@@ -130,17 +135,17 @@ app.post("/api/validCart", async (req, res) => {
   //   Furniture.findOneAndUpdate({_id: id}, {"status.onSale":false}, {upsert: false}, function(err, doc) {
   //     if (err) return res.send(500, {error: err});
   // });
-  console.log(id, title);
+  // console.log(id, title);
   Furniture.findOneAndUpdate(
-    { _id: id},
-    {"status.onSale":false} ,
-    { new: true },
-    (err, order) => {
-    if (err) {
-        return res.status(400).json({error: "Cannot update order status"});
-    }
-    res.json(order);
-    });
+    { _id: query[i]._id},
+    {"status.onSale":true, "status.sold": true})
+    // { new: true })
+    // (err, order) => {
+    // if (err) {
+    //     return res.status(400).json({error: "Cannot update order status"});
+    // }
+    // res.json(order);
+    // });
   }
   command.totalPrice = total;
   await command
@@ -152,6 +157,7 @@ app.post("/api/validCart", async (req, res) => {
 // on importe le model User
 const User = require("./models/User");
 const { updateOne } = require("./models/Furniture");
+const { query } = require("express");
   // // on passe l'objet auth pour transmettre le token à la requête
 // app.post("/api/addUser", (req, res) => {
 //   const query = req.body
