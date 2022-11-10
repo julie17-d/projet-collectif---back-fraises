@@ -64,6 +64,12 @@ app.get("/api/furnitures", (req, res) => {
     .catch((error) => res.status(400).json({ error }));
 });
 
+app.get("/api/allFurnitures", (req, res) => {
+  Furniture.find()
+    .then((furnitures) => res.status(201).json(furnitures))
+    .catch((error) => res.status(400).json({ error }));
+});
+
 // on passe l'objet auth pour transmettre le token à la requête
 app.post("/api/addFurniture", (req, res) => {
   // to delete an entire collection on mongoDB
@@ -121,13 +127,20 @@ app.post("/api/validCart", async (req, res) => {
       pictureurl: pictureUrl,
     });
 
-    // Furniture.findOneAndUpdate({ _id: id },{"$set": { "status.sold": true } },{returnOriginal: false});
-    // Furniture.findOneAndUpdate({ _id: id },{"$set": { "status.onSale": false } },{returnOriginal: false})
-    // await Furniture.findOneAndUpdate({'_id': id}, {"status.sold": true});
-    // await Furniture.findOneAndUpdate({'_id': id}, { "status.onSale": false});
-    // Furniture.findOneAndUpdate({'_id': id}, {"$set": { "status.onSale": false}, "$set": {"status.sold": true}});
-    // return res.send('Succesfully saved.');
-    // });
+  //   Furniture.findOneAndUpdate({_id: id}, {"status.onSale":false}, {upsert: false}, function(err, doc) {
+  //     if (err) return res.send(500, {error: err});
+  // });
+  console.log(id, title);
+  Furniture.findOneAndUpdate(
+    { _id: id},
+    {"status.onSale":false} ,
+    { new: true },
+    (err, order) => {
+    if (err) {
+        return res.status(400).json({error: "Cannot update order status"});
+    }
+    res.json(order);
+    });
   }
 
   const updateFurnitures = query.map((record) => {
@@ -160,6 +173,7 @@ app.post("/api/validCart", async (req, res) => {
 
 // on importe le model User
 const User = require("./models/User");
+const { updateOne } = require("./models/Furniture");
 // // on passe l'objet auth pour transmettre le token à la requête
 // app.post("/api/addUser", (req, res) => {
 //   const query = req.body
@@ -189,7 +203,7 @@ app.get("/api/users", (req, res) => {
 
 // on crée un endpoint pour l'authentification signup
 app.post("/api/auth/signup", (req, res) => {
-  const query = req.body.user
+  const query = req.body.user;
   bcrypt
     .hash(query.password, 10) //req.body.password à la place de "Test3" quand info reçue du front/ 10 => nombre
     .then((hash) => {
@@ -229,9 +243,12 @@ app.post("/api/auth/login", (req, res) => {
             if (!valid) {
               res
                 .status(401)
-                .json({ message: "Paire identifiants mot de passe incorrecte" });
+                .json({
+                  message: "Paire identifiants mot de passe incorrecte",
+                });
             } else {
               res.status(200).json({
+                firstName: user.firstName,
                 userId: user._id,
                 token: jwt.sign(
                   { userId: user._id }, // données à encoder à l'interieur du token => on appelle ça le "payload". On encode le userId car si on crée un objet avec un user, on ne doit pas pouvoir le modifier avec un autre user. Le userId encodé sera utilisé pour appliquer le bon userId à chaque objet pourqu'il ne puisse être modifié que par le user qui l'a créé.
@@ -244,6 +261,9 @@ app.post("/api/auth/login", (req, res) => {
               //    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzY1MjcyMTEyN2Q4NzViY2QwYWIwN2UiLCJpYXQiOjE2Njc1NzM5NzYsImV4cCI6MTY2NzY2MDM3Nn0.SgVfVoG-O7CLRVdFYdkr5iv8EleOeMb1J4RaE_k1e-I"
               // }
             }
+          })
+          .then((data) => {
+            window.localStorage.setItem("token", JSON.stringify(token));
           })
           .catch((error) => {
             res.status(500).json({ error });
