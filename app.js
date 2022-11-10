@@ -70,20 +70,18 @@ app.post("/api/addFurniture", (req, res) => {
   // Furniture.collection.deleteMany();
   // on a créer un middleware qui repond a la requete POST
   const furniture = new Furniture({
-    title: "Canapé-lit Clémentine",
-    type: "assise",
-    description:
-      "Que vous ayez une envie de vous assoupir ou de savourer une tasse de thé, le canapé-lit Clémentine sera toujours là pour combler vos besoins.",
+    title: "Ancienne planche à laver en bois et tôle galvanisée.",
+    type: "salle de bain",
+    description: "Voici une ancienne planche à laver le linge datant des années 1950, en bois et en acier galvanisé. Dans un très bel état, c'est un accessoire idéal pour parfaire votre décoration rustique ou campagnarde.",
     dimensions_cm: {
-      height: 80,
-      width: 240,
-      depth: 80,
+      height: 70,
+      width: 25,
+      depth: 0,
     },
-    materials: ["textile"],
-    colors: "jaune",
-    pictureUrl:
-      "https://assets.loaf.com/images/hero_large/4833611-squisharoo.jpg",
-    price: 950,
+    materials: ["bois"], 
+    colors: "multicolore",
+    pictureUrl:"https://i.etsystatic.com/19911683/r/il/8bb918/4208369609/il_1588xN.4208369609_ku03.jpg",
+    price: 26,
     status: {
       onSale: true,
       pending: false,
