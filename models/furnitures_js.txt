@@ -98,13 +98,224 @@
         depth: 20
     },
     colors: "rose",
-    materials: ["marble"],
+    materials: ["marbre"],
     pictureUrl: "https://cdn.shopify.com/s/files/1/0627/1244/7234/products/IMG_0972_1445x.jpg",
     price: 3000,
     status: {
         "onSale: true,
         "pending: false,
         "sold: false
+        },
+    seller: "Lauréline Fleury",
+    date: Date.now()
+}
+//Ajout article Assétou
+{   
+    title: "2 torchons ancien Amandine en lin à liteau rouge",
+    type: "linge de maison",
+    description: "Très belle confection de grande marque, 100% en lin, bon état. Cet ensemble de torchons Amandine fera l'unanimité au sein de votre famille.",
+    dimensions_cm: { 
+        height: 70,
+        width: 90,
+        depth: 0
+    },
+    materials: ["textile"],
+    colors: "multicolore",
+    pictureUrl: "https://i.etsystatic.com/25943970/r/il/7a5853/3989793079/il_1588xN.3989793079_e2o9.jpg",
+    price: 16,
+    status: {
+        onSale: true,
+        pending: false,
+        sold: false
+        },
+    seller: "Lauréline Fleury",
+    date: Date.now()
+}
+
+title: "Serviette vintage Marin en lin",
+    type: "linge de maison",
+    description: "Une vraie pépite cette serviette Marin, 100% en lin, bon état. Cette serviette Marin mettra vos hommes à la vaisselle.",
+    dimensions_cm: { 
+        height: 90,
+        width: 100,
+        depth: 0
+    },
+    materials: ["textile"],
+    colors: "multicolore",
+    pictureUrl: "https://i.etsystatic.com/18676301/r/il/b45885/4278483064/il_1588xN.4278483064_o4ma.jpg",
+    price: 8,
+    status: {
+        onSale: true,
+        pending: false,
+        sold: false
+        },
+    seller: "Lauréline Fleury",
+    date: Date.now()
+}
+
+title: "Bouteille d'Apothicaire",
+    type: "décoration",
+    description: "Faites un pas vers le zéro déchet avec ces bouteilles en verre transparent. Elles seront un contenant idéal pour vos Savons, Shampooing, Crèmes, Produit vaisselle ou autre fait maison ou achetés en vrac",
+    dimensions_cm: { 
+        height: 15,
+        width: 7,
+        depth: 0
+    },
+    materials: ["verre"],
+    colors: "transparent",
+    pictureUrl: "https://i.etsystatic.com/iap/036ba2/4147668930/iap_640x640.4147668930_3piydt3j.jpg?version=0",
+    price: 11,
+    status: {
+        onSale: true,
+        pending: false,
+        sold: false
+        },
+    seller: "Lauréline Fleury",
+    date: Date.now()
+}
+
+title: "Tableau Frida kalho",
+    type: "décoration",
+    description: "Un tableau original imprimé sur bois 100% main. Une bonne idée cadeau qui fera plaisir à vos proches. 100% fait à la main.",
+    dimensions_cm: { 
+        height: 40,
+        width: 20,
+        depth: 0
+    },
+    materials: ["bois"],
+    colors: "multicolore",
+    pictureUrl: "https://i.etsystatic.com/16257635/r/il/def846/2119713115/il_1588xN.2119713115_qsd8.jpg",
+    price: 30,
+    status: {
+        onSale: true,
+        pending: false,
+        sold: false
+        },
+    seller: "Lauréline Fleury",
+    date: Date.now()
+}
+
+title: "Lampe baladeuse vintage en verre ambré",
+    type: "Luminaire",
+    description: "Lampe baladeuse vintage en verre ambré. Créée à partir d'un globe en verre ambré ancien (années 70) aux jolis motifs". Une vraie oeuvre d'art.,
+    dimensions_cm: { 
+        height: 35,
+        width: 22,
+        depth: 0
+    },
+    materials: ["verre"],
+    colors: "jaune",
+    pictureUrl: "https://i.etsystatic.com/31939259/r/il/2268e0/4311991431/il_1588xN.4311991431_odj1.jpg",
+    price: 70,
+    status: {
+        onSale: true,
+        pending: false,
+        sold: false
+        },
+    seller: "Lauréline Fleury",
+    date: Date.now()
+}
+
+title: "Lampe Aluminor vintage",
+    type: "luminaire",
+    description: "Belle lampe Aluminor vintage des années 1970, fabriquée en France. En parfait état, les parties chromées ont été lustrées pour redonner l’éclat d’origine.".,
+    dimensions_cm: { 
+        height: 30,
+        width: 15,
+        depth: 0
+    },
+    materials: ["autre"],
+    colors: "blanc",
+    pictureUrl: "https://i.etsystatic.com/36568253/r/il/a5f9d9/4180956066/il_1588xN.4180956066_fn0l.jpg",
+    price: 75,
+    status: {
+        onSale: true,
+        pending: false,
+        sold: false
+        },
+    seller: "Lauréline Fleury",
+    date: Date.now()
+}
+
+title: "Lot de 6 anciens dessous de verres taillés",
+    type: "art de la table",
+    description: "Lot de 6 anciens dessous de verres, taillé dans le verre, en très bon état. Années 1970. Environ 7 cm de diamètre. Parfait pour une décoration de table vintage et chic.",
+    dimensions_cm: { 
+        height: 1,
+        width: 7,
+        depth: 0
+    },
+    materials: ["verre"],
+    colors: "transparent",
+    pictureUrl: "https://i.etsystatic.com/16421880/r/il/540522/4066752296/il_1588xN.4066752296_as7z.jpg",
+    price: 26,
+    status: {
+        onSale: true,
+        pending: false,
+        sold: false
+        },
+    seller: "Lauréline Fleury",
+    date: Date.now()
+}
+
+title: "Suite de 2 raviers - JULIEN",
+    type: "art de la table",
+    description: "Assortiment de 2 raviers en terre de fer coloris Vert Céladon, datant de fin XIXème, début  XXème siècle, fait main, à compléter avec les pièces de service SABINE.",
+    dimensions_cm: { 
+        height: 2,
+        width: 15,
+        depth: 0
+    },
+    materials: ["autres"],
+    colors: "multicolore",
+    pictureUrl: "https://i.etsystatic.com/33734136/r/il/b5c260/4253621157/il_1588xN.4253621157_knl6.jpg",
+    price: 39,
+    status: {
+        onSale: true,
+        pending: false,
+        sold: false
+        },
+    seller: "Lauréline Fleury",
+    date: Date.now()
+}
+
+title: "Dérouleur papier toilette industriel",
+    type: "salle de bain",
+    description: "Dérouleur de papier toilette industriel et steampunk pour une décoration original dans vos toilettes.",
+    dimensions_cm: { 
+        height: 10,
+        width: 10,
+        depth: 0
+    },
+    materials: ["autre"],
+    colors: "autre",
+    pictureUrl: "https://i.etsystatic.com/35117386/r/il/84c44b/4177999231/il_1588xN.4177999231_hepo.jpg",
+    price: 40,
+    status: {
+        onSale: true,
+        pending: false,
+        sold: false
+        },
+    seller: "Lauréline Fleury",
+    date: Date.now()
+}
+
+title: "Ancienne planche à laver en bois et tôle galvanisée",
+    type: "salle de bain",
+    description: "Voici une ancienne planche à laver le linge datant des années 1950, en bois et en acier galvanisé. Dans un très bel état, c'est un accessoire idéal pour parfaire votre décoration rustique ou campagnarde.",
+    dimensions_cm: { 
+        height: 70,
+        width: 25,
+        depth: 0
+    },
+    materials: ["bois"],
+    colors: "multicolore",
+    pictureUrl: "https://i.etsystatic.com/19911683/r/il/8bb918/4208369609/il_1588xN.4208369609_ku03.jpg",
+    price: 26,
+    status: {
+        onSale: true,
+        pending: false,
+        sold: false
         },
     seller: "Lauréline Fleury",
     date: Date.now()
