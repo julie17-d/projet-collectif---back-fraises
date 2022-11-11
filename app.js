@@ -78,20 +78,20 @@ app.post("/api/addFurniture", (req, res) => {
   // Furniture.collection.deleteMany();
   // on a créer un middleware qui repond a la requete POST
   const furniture = new Furniture({
-    title: query.title,
-    type: query.type,
+    title: "Canapé-lit Clémentine",
+    type: "assise",
     description:
-      query.description,
+      "Que vous ayez une envie de vous assoupir ou de savourer une tasse de thé, le canapé-lit Clémentine sera toujours là pour combler vos besoins.",
     dimensions_cm: {
-      height: query.height,
-      width: query.width,
-      depth: query.depth,
+      height: 80,
+      width: 240,
+      depth: 80,
     },
-    materials: query.materials,
-    colors: query.colors,
+    materials: ["textile"],
+    colors: "jaune",
     pictureUrl:
-      "https://www.petiteamelie.fr/lit-de-bebe-evolutif-blanc-70x140-bosque.html",
-    price: query.price,
+      "https://assets.loaf.com/images/hero_large/4833611-squisharoo.jpg",
+    price: 950,
     status: {
       onSale: false,
       pending: true,
@@ -147,17 +147,38 @@ app.post("/api/validCart", async (req, res) => {
     // res.json(order);
     // });
   }
-  command.totalPrice = total;
-  await command
-    .save()
-    .then(() => res.status(201).json({ message: "Commande enregistrée !" }))
-    .catch((error) => res.status(400).json({ error }));
+
+  const updateFurnitures = query.map((record) => {
+    const updateFurniture = {
+      'updateOne': {
+        'filter': {
+          _id: record._id,
+        },
+        'update': {
+          $set:
+          {
+            'status.onSale': false,
+            'status.sold': true
+          }
+        },
+      }
+    }
+    return updateFurniture
+  })
+  
+  await Furniture.bulkWrite(updateFurnitures)
+    .then(async () => {
+      command.totalPrice = total;
+      await command
+        .save()
+        .then(() => res.status(201).json({ message: "Commande enregistrée !" }))
+        .catch((error) => res.status(400).json({ error }));
+    })
 });
 
 // on importe le model User
 const User = require("./models/User");
 const { updateOne } = require("./models/Furniture");
-const { query } = require("express");
   // // on passe l'objet auth pour transmettre le token à la requête
 // app.post("/api/addUser", (req, res) => {
 //   const query = req.body
@@ -233,6 +254,7 @@ app.post("/api/auth/login", (req, res) => {
             } else {
               res.status(200).json({
                 firstName: user.firstName,
+                userId: user._id,
                 token: jwt.sign(
                   { userId: user._id }, // données à encoder à l'interieur du token => on appelle ça le "payload". On encode le userId car si on crée un objet avec un user, on ne doit pas pouvoir le modifier avec un autre user. Le userId encodé sera utilisé pour appliquer le bon userId à chaque objet pourqu'il ne puisse être modifié que par le user qui l'a créé.
                   "RANDOM_TOKEN_SECRET", // clé secrète pour l'encodage => ici, un secret simple est créé car on est en dév et pas en prod.
@@ -257,5 +279,22 @@ app.post("/api/auth/login", (req, res) => {
       req.status(500).json({ error });
     });
 });
+
+app.put("/api/updatestatus", async (req, res) => {
+  const query = req.body;
+
+  const id = query.id;
+  let onSale = query.onSale;
+  let pending = query.pending;
+  let sold = query.sold;
+
+  if (onSale === undefined) { onSale = false };
+  if (pending === undefined) { pending = false };
+  if (sold === undefined) { sold = false };
+
+  await Furniture.findOneAndUpdate({ _id: id }, { "status.onSale": onSale, "status.pending": pending, "status.sold": sold }, { upsert: false })
+    .then((updates) => res.status(201).json("Status updated."))
+    .catch((error) => res.status(400).json({ error }));
+})
 
 module.exports = app; // on exporte le module app qu'on récupère dans le serveur
